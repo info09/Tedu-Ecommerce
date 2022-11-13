@@ -29,20 +29,20 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
 
-namespace TeduEcommerce;
+namespace TeduEcommerce.Admin;
 
 [DependsOn(
-    typeof(TeduEcommerceHttpApiModule),
+    typeof(TeduEcommerceAdminHttpApiModule),
     typeof(AbpAutofacModule),
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpDistributedLockingModule),
     typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
-    typeof(TeduEcommerceApplicationModule),
+    typeof(TeduEcommerceAdminApplicationModule),
     typeof(TeduEcommerceEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
 )]
-public class TeduEcommerceHttpApiHostModule : AbpModule
+public class TeduEcommerceAdminHttpApiHostModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -75,16 +75,16 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
             {
                 options.FileSets.ReplaceEmbeddedByPhysical<TeduEcommerceDomainSharedModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Admin.Domain.Shared"));
+                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Domain.Shared"));
                 options.FileSets.ReplaceEmbeddedByPhysical<TeduEcommerceDomainModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Admin.Domain"));
+                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<TeduEcommerceApplicationContractsModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Admin.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<TeduEcommerceApplicationModule>(
+                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Application.Contracts"));
+                options.FileSets.ReplaceEmbeddedByPhysical<TeduEcommerceAdminApplicationModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Admin.Application"));
+                        $"..{Path.DirectorySeparatorChar}TeduEcommerce.Application"));
             });
         }
     }
@@ -93,7 +93,7 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.Create(typeof(TeduEcommerceApplicationModule).Assembly);
+            options.ConventionalControllers.Create(typeof(TeduEcommerceAdminApplicationModule).Assembly);
         });
     }
 
@@ -104,7 +104,7 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
             {
                 options.Authority = configuration["AuthServer:Authority"];
                 options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "TeduEcommerce.Admin";
+                options.Audience = "TeduEcommerce";
             });
     }
 
@@ -114,11 +114,11 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
             configuration["AuthServer:Authority"],
             new Dictionary<string, string>
             {
-                    {"TeduEcommerce.Admin", "TeduEcommerce Admin API"}
+                    {"TeduEcommerce", "TeduEcommerce API"}
             },
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TeduEcommerce Admin API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TeduEcommerce API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             });
@@ -156,7 +156,7 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
         IConfiguration configuration,
         IWebHostEnvironment hostingEnvironment)
     {
-        var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("TeduEcommerce.Admin");
+        var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("TeduEcommerce");
         if (!hostingEnvironment.IsDevelopment())
         {
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
@@ -229,7 +229,7 @@ public class TeduEcommerceHttpApiHostModule : AbpModule
 
             var configuration = context.GetConfiguration();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes("TeduEcommerce.Admin");
+            options.OAuthScopes("TeduEcommerce");
         });
 
         app.UseAuditing();
