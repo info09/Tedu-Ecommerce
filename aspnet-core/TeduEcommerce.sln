@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeduEcommerce.HttpApi.Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeduEcommerce.DbMigrator", "src\TeduEcommerce.DbMigrator\TeduEcommerce.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{76367F1A-A4B1-4609-838E-C07418F6B580}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{76367F1A-A4B1-4609-838E-C07418F6B580}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{A362AA35-C0FF-4A6B-B864-862BC380D48D}"
 EndProject
