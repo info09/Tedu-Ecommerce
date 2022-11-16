@@ -12,7 +12,7 @@ using Volo.Abp.TenantManagement;
 namespace TeduEcommerce.Admin;
 
 [DependsOn(
-    typeof(TeduEcommerceAdminApplicationContractsModule),
+    typeof(TeduEcommerceApplicationContractsModule),
     typeof(AbpAccountHttpApiModule),
     typeof(AbpIdentityHttpApiModule),
     typeof(AbpPermissionManagementHttpApiModule),

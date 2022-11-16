@@ -5,11 +5,13 @@ namespace TeduEcommerce.Products
 {
     public class Product : AuditedAggregateRoot<Guid>
     {
-        public Guid ManufactureId { get; set; }
+        public Guid ManufacturerId { get; set; }
 
         public string Name { get; set; }
 
         public string Code { get; set; }
+
+        public string Slug { get; set; }
 
         public ProductType ProductType { get; set; }
 
@@ -17,7 +19,9 @@ namespace TeduEcommerce.Products
 
         public int SortOrder { get; set; }
 
-        public bool Visibility { get; set; }
+        public bool Visiblity { get; set; }
+
+        public bool IsActive { get; set; }
 
         public Guid CategoryId { get; set; }
 

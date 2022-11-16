@@ -11,7 +11,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace TeduEcommerce.Admin;
 
 [DependsOn(
-    typeof(TeduEcommerceAdminApplicationContractsModule),
+    typeof(TeduEcommerceApplicationContractsModule),
     typeof(AbpAccountHttpApiClientModule),
     typeof(AbpIdentityHttpApiClientModule),
     typeof(AbpPermissionManagementHttpApiClientModule),
@@ -26,7 +26,7 @@ public class TeduEcommerceAdminHttpApiClientModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddHttpClientProxies(
-            typeof(TeduEcommerceAdminApplicationContractsModule).Assembly,
+            typeof(TeduEcommerceApplicationContractsModule).Assembly,
             RemoteServiceName
         );
 

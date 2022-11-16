@@ -12,7 +12,7 @@ namespace TeduEcommerce.Admin;
 [DependsOn(
     typeof(TeduEcommerceDomainModule),
     typeof(AbpAccountApplicationModule),
-    typeof(TeduEcommerceAdminApplicationContractsModule),
+    typeof(TeduEcommerceApplicationContractsModule),
     typeof(AbpIdentityApplicationModule),
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpTenantManagementApplicationModule),

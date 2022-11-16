@@ -19,7 +19,7 @@ namespace TeduEcommerce.Admin;
     typeof(AbpTenantManagementApplicationContractsModule),
     typeof(AbpObjectExtendingModule)
 )]
-public class TeduEcommerceAdminApplicationContractsModule : AbpModule
+public class TeduEcommerceApplicationContractsModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
