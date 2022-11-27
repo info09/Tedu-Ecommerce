@@ -85,22 +85,26 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             OpenIddictConstants.Permissions.Scopes.Email,
             OpenIddictConstants.Permissions.Scopes.Phone,
             OpenIddictConstants.Permissions.Scopes.Profile,
-            OpenIddictConstants.Permissions.Scopes.Roles,
-            "TeduEcommerce"
+            OpenIddictConstants.Permissions.Scopes.Roles
         };
+
+        var adminScopes = new List<string>();
+        adminScopes.AddRange(commonScopes);
+        adminScopes.Add("TeduEcommerce.Admin");
+
+        var clientScopes = new List<string>();
+        clientScopes.AddRange(commonScopes);
+        clientScopes.Add("TeduEcommerce");
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
         //Admin Client
-        var adminClientId = configurationSection["TeduEcommerce_Admin:ClientId"];
-        if (!adminClientId.IsNullOrWhiteSpace())
+        var webAdminClientId = configurationSection["TeduEcommerce_Admin:ClientId"];
+        if (!webAdminClientId.IsNullOrWhiteSpace())
         {
-            var adminClientRootUrl = configurationSection["TeduEcommerce_Admin:RootUrl"].EnsureEndsWith('/');
-
-            /* TeduEcommerce_Web client is only needed if you created a tiered
-             * solution. Otherwise, you can delete this client. */
+            var adminWebClientRootUrl = configurationSection["TeduEcommerce_Admin:RootUrl"].TrimEnd('/');
             await CreateApplicationAsync(
-                name: adminClientId,
+                name: webAdminClientId,
                 type: OpenIddictConstants.ClientTypes.Confidential,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Admin Application",
@@ -111,10 +115,10 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                     OpenIddictConstants.GrantTypes.RefreshToken,
                     OpenIddictConstants.GrantTypes.Implicit
                 },
-                scopes: commonScopes,
-                redirectUri: $"{adminClientRootUrl}signin-oidc",
-                clientUri: adminClientRootUrl,
-                postLogoutRedirectUri: $"{adminClientRootUrl}signout-callback-oidc"
+                scopes: adminScopes,
+                redirectUri: adminWebClientRootUrl,
+                clientUri: adminWebClientRootUrl,
+                postLogoutRedirectUri: adminWebClientRootUrl
             );
         }
 
@@ -137,14 +141,33 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.GrantTypes.Implicit
                 },
-                scopes: commonScopes,
+                scopes: clientScopes,
                 redirectUri: $"{webClientRootUrl}signin-oidc",
                 clientUri: webClientRootUrl,
                 postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
             );
         }
 
-        
+        // Swagger Client
+        var swaggerClientId = configurationSection["TeduEcommerce_Admin_Swagger:ClientId"];
+        if (!swaggerClientId.IsNullOrWhiteSpace())
+        {
+            var swaggerRootUrl = configurationSection["TeduEcommerce_Admin_Swagger:RootUrl"].TrimEnd('/');
+            await CreateApplicationAsync(
+                name: swaggerClientId,
+                type: OpenIddictConstants.ClientTypes.Public,
+                consentType: OpenIddictConstants.ConsentTypes.Implicit,
+                displayName: "Swagger Admin Application",
+                secret: null,
+                grantTypes: new List<string>
+                {
+                    OpenIddictConstants.GrantTypes.AuthorizationCode,
+                },
+                scopes: adminScopes,
+                redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
+                clientUri: swaggerRootUrl
+            );
+        }
     }
 
     private async Task CreateApplicationAsync(
@@ -192,7 +215,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             Check.NotNullOrEmpty(grantTypes, nameof(grantTypes));
             Check.NotNullOrEmpty(scopes, nameof(scopes));
 
-            if (new [] { OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit }.All(grantTypes.Contains))
+            if (new[] { OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit }.All(grantTypes.Contains))
             {
                 application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.CodeIdToken);
 
@@ -269,7 +292,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 }
             }
 
-            var buildInScopes = new []
+            var buildInScopes = new[]
             {
                 OpenIddictConstants.Permissions.Scopes.Address,
                 OpenIddictConstants.Permissions.Scopes.Email,
