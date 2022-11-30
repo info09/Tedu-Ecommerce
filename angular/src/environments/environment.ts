@@ -12,7 +12,8 @@ export const environment = {
   oAuthConfig: {
     issuer: 'https://localhost:5000/',
     redirectUri: baseUrl,
-    clientId: 'TeduEcommerce.Admin',
+    clientId: 'TeduEcommerce_Admin',
+    dummyClientSecret:'1q2w3e*',
     responseType: 'code',
     scope: 'offline_access TeduEcommerce.Admin',
     requireHttps: true,
